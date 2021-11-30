@@ -25,6 +25,7 @@ HostConstSharedPtr OriginalDstCluster::LoadBalancer::chooseHost(LoadBalancerCont
     // Check if override host header is present, if yes use it otherwise check local address.
     Network::Address::InstanceConstSharedPtr dst_host = nullptr;
     if (parent_->use_http_header_) {
+      ENVOY_LOG(debug, "Using host from header.")
       dst_host = requestOverrideHost(context);
     }
     if (dst_host == nullptr) {
@@ -32,6 +33,7 @@ HostConstSharedPtr OriginalDstCluster::LoadBalancer::chooseHost(LoadBalancerCont
       // The local address of the downstream connection is the original destination address,
       // if localAddressRestored() returns 'true'.
       if (connection && connection->connectionInfoProvider().localAddressRestored()) {
+        ENVOY_LOG(debug, "Using host from downstream connection.")
         dst_host = connection->connectionInfoProvider().localAddress();
       }
     }
